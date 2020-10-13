@@ -19,12 +19,12 @@ var (
 
 // Connect returns a pooled connection to the database.
 func Connect() (*gorm.DB, error) {
-	url := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local", *dbUser, *dbPassword, *dbHost, *dbPort, *dbSchema)
+	url := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local", *dbUser, *dbPassword, *dbHost, *dbPort, *dbSchema)
 	return gorm.Open("mysql", url)
 }
 
 // connectForTesting returns a pooled connection to the database for integration testing.
 func connectForTesting(_ *testing.T) (*gorm.DB, error) {
-	url := fmt.Sprintf("%s:%s@tcp(%s:%d)/test?charset=utf8&parseTime=True&loc=Local", *dbUser, *dbPassword, *dbHost, *dbPort)
+	url := fmt.Sprintf("%s:%s@tcp(%s:%d)/test?charset=utf8mb4&parseTime=True&loc=Local", *dbUser, *dbPassword, *dbHost, *dbPort)
 	return gorm.Open("mysql", url)
 }
