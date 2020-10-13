@@ -42,9 +42,9 @@ func AddArticle(db *gorm.DB, article gophorem.Article) (uint, error) {
 	return p.ID, err
 }
 
-func LookupByTitle(db *gorm.DB, title string) (Article, error) {
+func LookupByTitle(db *gorm.DB, title string) (*Article, error) {
 	var a Article
 	r := db.Where(map[string]interface{}{"Title": title}).First(&a)
 
-	return a, r.Error
+	return &a, r.Error
 }
