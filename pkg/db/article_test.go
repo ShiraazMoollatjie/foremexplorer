@@ -13,7 +13,7 @@ func TestCreatePriceLog(t *testing.T) {
 	defer dbc.DropTableIfExists(&Article{})
 	require.NoError(t, dbc.AutoMigrate(&Article{}).Error)
 
-	plID, err := AddArticle(dbc, gophorem.Article{
+	aID, err := AddArticle(dbc, gophorem.Article{
 		TypeOf:               "something",
 		ID:                   123,
 		Title:                "tlaksjd",
@@ -26,5 +26,9 @@ func TestCreatePriceLog(t *testing.T) {
 		PublicReactionsCount: 1,
 	})
 	require.NoError(t, err)
-	require.NotZero(t, plID)
+	require.NotZero(t, aID)
+
+	res, err := LookupByTitle(dbc, "tlaksjd")
+	require.NoError(t, err)
+	require.Equal(t, aID, res.ID)
 }
