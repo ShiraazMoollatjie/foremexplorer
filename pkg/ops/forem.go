@@ -23,7 +23,7 @@ func QueryForemArticlesForever(s *state.State) {
 
 		id, err := db.AddArticle(s.DB, p)
 		if err != nil {
-			log.Printf("error saving article: %v\n article is: %+v", err, a)
+			log.Printf("error saving article: %v", err, a)
 			continue
 		}
 		log.Println("saving article with id ", id)
