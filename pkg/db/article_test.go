@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestCreatePriceLog(t *testing.T) {
+func TestCreateArticle(t *testing.T) {
 	dbc, err := connectForTesting(t)
 	require.NoError(t, err)
 	defer dbc.DropTableIfExists(&Article{})
@@ -28,7 +28,7 @@ func TestCreatePriceLog(t *testing.T) {
 	require.NoError(t, err)
 	require.NotZero(t, aID)
 
-	res, err := LookupByTitle(dbc, "tlaksjd")
+	res, err := LookupByDevToID(dbc, 123)
 	require.NoError(t, err)
 	require.Equal(t, aID, res.ID)
 }
