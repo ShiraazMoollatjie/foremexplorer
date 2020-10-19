@@ -4,8 +4,11 @@ run: start-testdb
 run-app:
 	go run cmd/foremexplorer/main.go --dbSchema=foremexplorer --dbUser=foremexplorer --dbPassword=password
 
-seed: 
+run-seed: 
 	go run cmd/seeder/main.go --dbSchema=foremexplorer --dbUser=foremexplorer --dbPassword=password
+
+run-dataseeder:
+	go run cmd/dataseeder/main.go --dbSchema=foremexplorer --dbUser=foremexplorer --dbPassword=password
 
 start-testdb:
 	docker-compose -f deploy/docker-compose.yml up -d
