@@ -39,7 +39,6 @@ func SeedDevData(s *state.State) {
 			break
 		}
 		pg++
-		break
 	}
 
 }
