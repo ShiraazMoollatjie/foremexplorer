@@ -17,5 +17,9 @@ func main() {
 	}
 
 	s := state.NewState()
+
+	log.Println("Starting paging seeding")
 	ops.SeedDevData(s)
+	log.Println("Starting incremental seeding")
+	ops.SeedDevDataIncrementally(s)
 }

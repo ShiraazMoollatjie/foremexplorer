@@ -42,9 +42,45 @@ func SeedDevData(s *state.State) {
 	}
 }
 
+// SeedDevDataIncrementally is a once off operation that will seed all the existing data into the database.
+func SeedDevDataIncrementally(s *state.State) {
+	ctx := context.Background()
+	const limit = 492198
+
+	for i := int32(1); i <= limit; i++ {
+		log.Printf("importing article %d", i)
+		a, err := s.ForemClient.PublishedArticle(ctx, i)
+
+		if err != nil {
+			log.Printf("cannot fetch forem article: %v", err)
+			continue // skip
+		}
+
+		err = importArticle(ctx, s, a)
+		if err != nil {
+			log.Printf("cannot import forem article: %v", err)
+			continue // skip
+		}
+
+		time.Sleep(200 * time.Millisecond) // Rate limit at most 5 requests per second.
+	}
+}
+
+func importArticle(ctx context.Context, s *state.State, a *gophorem.Article) error {
+	t0 := time.Now()
+	defer func() { log.Printf("time taken to import article %s", time.Since(t0)) }()
+
+	_, err := AddArticle(ctx, s, *a)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func importPages(ctx context.Context, s *state.State, al gophorem.Articles) error {
 	t0 := time.Now()
-	defer func() { log.Printf("time taken to import page %s seconds", time.Since(t0)) }()
+	defer func() { log.Printf("time taken to import page %s", time.Since(t0)) }()
 
 	for _, a := range al {
 		at := a.Article
