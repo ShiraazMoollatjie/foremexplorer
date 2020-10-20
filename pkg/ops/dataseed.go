@@ -28,7 +28,7 @@ func SeedDevData(s *state.State) {
 			continue // retry
 		}
 
-		err = importPage(ctx, s, al)
+		err = importPages(ctx, s, al)
 		if err != nil {
 			log.Printf("cannot import forem articles: %v", err)
 			continue // retry
@@ -42,7 +42,7 @@ func SeedDevData(s *state.State) {
 	}
 }
 
-func importPage(ctx context.Context, s *state.State, al gophorem.Articles) error {
+func importPages(ctx context.Context, s *state.State, al gophorem.Articles) error {
 	t0 := time.Now()
 	defer func() { log.Printf("time taken to import page %s seconds", time.Since(t0)) }()
 
