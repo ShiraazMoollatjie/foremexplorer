@@ -80,3 +80,54 @@ func (h handlers) DayOfYear(w http.ResponseWriter, r *http.Request) {
 		Data: rc,
 	})
 }
+
+type timeOfDayResp struct {
+	Stats struct {
+		BestHourOfDay int
+		ReactionCount int
+	}
+	Data map[int]int
+}
+
+func (h handlers) TimeOfDay(w http.ResponseWriter, r *http.Request) {
+
+	al, err := db.ListArticles(h.state.DB)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("error"))
+	}
+
+	t0 := time.Now()
+	rc := make(map[int]int)
+	for _, a := range al {
+		doy := a.PublishedAt.Hour()
+		r, ok := rc[doy]
+		if !ok {
+			rc[doy] = a.PublicReactionsCount
+		} else {
+			rc[doy] = a.PublicReactionsCount + r
+		}
+	}
+	log.Printf("iterating through all articles took %s", time.Since(t0))
+
+	var bestHour, bestCount int
+	for k, v := range rc {
+		if v > bestCount {
+			bestHour = k
+			bestCount = v
+		}
+	}
+
+	enc := json.NewEncoder(w)
+	enc.SetIndent("", " ")
+	enc.Encode(timeOfDayResp{
+		Stats: struct {
+			BestHourOfDay int
+			ReactionCount int
+		}{
+			BestHourOfDay: bestHour,
+			ReactionCount: bestCount,
+		},
+		Data: rc,
+	})
+}
