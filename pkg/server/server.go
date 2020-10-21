@@ -15,7 +15,7 @@ func ServeHttp(s *state.State) {
 	r.HandleFunc("/", h.ComingSoon).Methods("GET")
 	r.HandleFunc("/analytics/posts/dayofyear", h.DayOfYear).Methods("GET")
 	r.HandleFunc("/analytics/posts/timeofday", h.TimeOfDay).Methods("GET")
-	r.HandleFunc("/analytics/posts/timeofweek", h.ComingSoon).Methods("GET")
+	r.HandleFunc("/analytics/posts/timeofweek", h.TimeOfWeek).Methods("GET")
 	r.HandleFunc("/analytics/tags/highestcomments", h.ComingSoon).Methods("GET")
 	r.HandleFunc("/analytics/tags/highestreactions", h.ComingSoon).Methods("GET")
 
