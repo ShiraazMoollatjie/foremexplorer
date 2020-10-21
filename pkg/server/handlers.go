@@ -24,7 +24,7 @@ type comingSoonResponse struct {
 	Message string
 }
 
-func (h handlers) ComingSoonHandler(w http.ResponseWriter, r *http.Request) {
+func (h handlers) ComingSoon(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(comingSoonResponse{
 		Message: "Busy being implemented",
 	})
