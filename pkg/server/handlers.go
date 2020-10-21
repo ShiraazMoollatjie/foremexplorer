@@ -215,3 +215,23 @@ func (h handlers) HighestReactions(w http.ResponseWriter, r *http.Request) {
 		Posts: al[:100],
 	})
 }
+
+func (h handlers) HighestComments(w http.ResponseWriter, r *http.Request) {
+	al, err := db.ListArticles(h.state.DB)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("error"))
+	}
+
+	sort.Slice(al, func(i, j int) bool {
+		return al[i].CommentsCount > al[j].CommentsCount
+	})
+
+	enc := json.NewEncoder(w)
+	enc.SetIndent("", " ")
+	enc.Encode(struct {
+		Posts []db.Article
+	}{
+		Posts: al[:100],
+	})
+}
