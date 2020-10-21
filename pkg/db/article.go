@@ -52,3 +52,10 @@ func LookupByDevToID(db *gorm.DB, devToID int) (*Article, error) {
 
 	return &a, r.Error
 }
+
+func ListArticles(db *gorm.DB) ([]Article, error) {
+	var al []Article
+	r := db.Find(&al)
+
+	return al, r.Error
+}
