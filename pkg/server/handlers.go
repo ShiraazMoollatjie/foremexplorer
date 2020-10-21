@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"sort"
 	"time"
 
 	"github.com/ShiraazMoollatjie/foremexplorer/pkg/db"
@@ -192,5 +193,25 @@ func (h handlers) TimeOfWeek(w http.ResponseWriter, r *http.Request) {
 			ReactionCount:     bestCount,
 		},
 		Data: rc,
+	})
+}
+
+func (h handlers) HighestReactions(w http.ResponseWriter, r *http.Request) {
+	al, err := db.ListArticles(h.state.DB)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("error"))
+	}
+
+	sort.Slice(al, func(i, j int) bool {
+		return al[i].PublicReactionsCount > al[j].PublicReactionsCount
+	})
+
+	enc := json.NewEncoder(w)
+	enc.SetIndent("", " ")
+	enc.Encode(struct {
+		Posts []db.Article
+	}{
+		Posts: al[:100],
 	})
 }
