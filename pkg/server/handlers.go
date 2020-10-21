@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"sort"
+	"strings"
 	"time"
 
 	"github.com/ShiraazMoollatjie/foremexplorer/pkg/db"
@@ -233,5 +234,75 @@ func (h handlers) HighestComments(w http.ResponseWriter, r *http.Request) {
 		Posts []db.Article
 	}{
 		Posts: al[:100],
+	})
+}
+
+func (h handlers) Reactions(w http.ResponseWriter, r *http.Request) {
+	al, err := db.ListArticles(h.state.DB)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("error"))
+	}
+
+	popTags := make(map[string]int)
+	for _, a := range al {
+		if a.Tags == "" {
+			continue
+		}
+
+		sTags := strings.Split(a.Tags, ",")
+
+		for _, t := range sTags {
+			tt := strings.Trim(t, " ")
+			pt, ok := popTags[tt]
+			if !ok {
+				popTags[tt] = a.PublicReactionsCount
+			} else {
+				popTags[tt] = a.PublicReactionsCount + pt
+			}
+		}
+	}
+
+	enc := json.NewEncoder(w)
+	enc.SetIndent("", " ")
+	enc.Encode(struct {
+		Tags map[string]int
+	}{
+		Tags: popTags,
+	})
+}
+
+func (h handlers) PostCount(w http.ResponseWriter, r *http.Request) {
+	al, err := db.ListArticles(h.state.DB)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("error"))
+	}
+
+	popTags := make(map[string]int)
+	for _, a := range al {
+		if a.Tags == "" {
+			continue
+		}
+
+		sTags := strings.Split(a.Tags, ",")
+
+		for _, t := range sTags {
+			tt := strings.Trim(t, " ")
+			pt, ok := popTags[tt]
+			if !ok {
+				popTags[tt] = 1
+			} else {
+				popTags[tt] = 1 + pt
+			}
+		}
+	}
+
+	enc := json.NewEncoder(w)
+	enc.SetIndent("", " ")
+	enc.Encode(struct {
+		Tags map[string]int
+	}{
+		Tags: popTags,
 	})
 }

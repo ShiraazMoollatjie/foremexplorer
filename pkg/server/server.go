@@ -18,6 +18,8 @@ func ServeHttp(s *state.State) {
 	r.HandleFunc("/analytics/posts/timeofweek", h.TimeOfWeek).Methods("GET")
 	r.HandleFunc("/analytics/highestcomments", h.HighestComments).Methods("GET")
 	r.HandleFunc("/analytics/highestreactions", h.HighestReactions).Methods("GET")
+	r.HandleFunc("/analytics/tags/reactions", h.Reactions).Methods("GET")
+	r.HandleFunc("/analytics/tags/postcounts", h.PostCount).Methods("GET")
 
 	log.Println("starting server")
 	log.Fatal(http.ListenAndServe(":8000", r))
